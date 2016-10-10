@@ -7,16 +7,14 @@ var fs = require("fs");
 
 var objective = process.argv[2];
 
-  // var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&r=json";
-
 switch(objective) {
 
     case "my-tweets":
-        displayTweet();
+        myTweets();
     break;
 
     case "spotify-this-song":
-        spotifyInfo();
+        spotifySong();
     break;
 
     case "movie-this":
@@ -32,30 +30,28 @@ switch(objective) {
 
 }
 
-function displayTweets() {
+function myTweets(tweets) {
 
-  var userName = mbaldwin91S;
-  client.get('statuses/user_timeline', userName, function(error, tweets, response){
+  var userName = "mbaldwin91";
+  request("user_timeline", function (error, body, response){
 
-  for(var i = 0; i<tweets.length; i++) {
-    var time = tweets[i];
+  for(var i = 0;i < myTweets.length; i++) {
+    var time = myTweets[i];
+   } 
+    console.log(userName, myTweets);
 
-    console.log( userName, tweets[i], "Time: " + date);
+  });
+};
 
-  }
-});
+function spotifySong(song) {
 
-function spotifyInfo() {
-
-  // request("https://www.spotify.com/us/", function(error, response, body){
-  spotify.search({ type: "track", query: song}, function(error, data){
-
+  spotify.search({query: song}, function(error, data){
   if(!error){
     for(var i = 0; i < data.length; i++) {
       var spotifyData = data[i];
 
           //shows artist, songname, and album
-      console.log(spotifyData.artist[0].name);
+      console.log(spotifyData.artist[i].name);
       console.log(spotifyData.songname.name);
       console.log(spotifyData.album.name);
 
@@ -64,16 +60,17 @@ function spotifyInfo() {
       fs.appendFile("random.txt", spotifyData.songname.name);
       fs.appendFile("random.txt", spotifyData.album.name);
      }
-    }
-
-  else {  //error message
-      console.log("Error, please try again.");
-
-};
+   }
+  else {
+       console.log("Error, please try again.")
+   }
+  });
+}
 
 function omdbInfo(movie) {
 
 var omdbUrl = "http://www.omdbapi.com/?t=" + title + "&y=&plot=short&r=json";
+var title = "boondock+saints";
 
 request(omdbUrl, function (error, response, body) {
 
@@ -88,15 +85,9 @@ request(omdbUrl, function (error, response, body) {
       fs.appendFile("random.txt", "Release Date: " + body.year);
       fs.appendFile("random.txt", "Actors: " + body.actors);
       fs.appendFile("random.txt", "Plot: " + body.plot);
-
-  // else {
-  //     console.log("Error, please try again.");
-  // }
- }
-});
-
-
-// function doThing() {
-
-
-// }
+    }
+  else {
+      console.log("Error, please try again.")
+    }
+  });
+};
