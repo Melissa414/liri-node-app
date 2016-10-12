@@ -1,93 +1,122 @@
-var mediaLink = require("./keys.js");
-var request = require('request');
-var twitter = require('twitter');
-var spotify = require('spotify');
-// var client = new twitter(keys.twitterKeys);
+var objective = require("./keys.js");
+var request = require("request");
+var spotify = require("spotify");
+var newTwitter = require("twitter");
+// console.log(objective);
+// console.log(objective.twitterKeys);
+var client = newTwitter(objective.twitterKeys);
 var fs = require("fs");
 
 var objective = process.argv[2];
 
-switch(objective) {
+switch (objective) {
 
     case "my-tweets":
         myTweets();
-    break;
+        break;
 
     case "spotify-this-song":
         spotifySong();
-    break;
+        break;
 
     case "movie-this":
         omdbInfo();
-    break;
+        break;
 
     case "do-what-it-says":
         doSomething();
-    break;
+        break;
 
     default:
-      console.log("Please input: my-tweets, spotify-this-song, movie-this or do-what-it-says");
+        console.log("Please input: my-tweets, spotify-this-song, movie-this or do-what-it-says");
 
 }
 
 function myTweets(tweets) {
+    var params = {
+        screen_name: "mBaldwin91"
+    };
+    client.get("statuses/user_timeline", params, function(error, tweets, response) {
 
-  var userName = "mbaldwin91";
-  request("user_timeline", function (error, body, response){
+        if (!error) {
+            for (var i = 0; i < 20; i++) {
 
-  for(var i = 0;i < myTweets.length; i++) {
-    var time = myTweets[i];
-   } 
-    console.log(userName, myTweets);
-
-  });
+                console.log("=================================================");
+                console.log("@mBaldwin91 " + JSON.stringify(tweets, null, 2));
+            }
+        }
+    });
 };
 
 function spotifySong(song) {
 
-  spotify.search({query: song}, function(error, data){
-  if(!error){
-    for(var i = 0; i < data.length; i++) {
-      var spotifyData = data[i];
+    var spotify = require("spotify");
 
-          //shows artist, songname, and album
-      console.log(spotifyData.artist[i].name);
-      console.log(spotifyData.songname.name);
-      console.log(spotifyData.album.name);
+    spotify.search({
+        type: "track",
+        id: "6c62731ce238491e8d6d09da2d34cc30"
+    }, function(err, data, response) {
 
-          //appending files to random.txt
-      fs.appendFile("random.txt", spotifyData.artist.name);
-      fs.appendFile("random.txt", spotifyData.songname.name);
-      fs.appendFile("random.txt", spotifyData.album.name);
-     }
-   }
-  else {
-       console.log("Error, please try again.")
-   }
-  });
+        if (!err) {
+                
+                console.log("=================================================");
+                //artist
+                console.log("Artist: " + JSON.stringify(data, null, 2));
+                //songname
+                console.log("Songname: " + JSON.stringify(data, null, 2));
+                //album
+                console.log("Album: " + JSON.stringify(data, null, 2));
+                console.log("=================================================");
+
+        } else {
+            console.log("Error, please try again.")
+        }
+    });
 }
 
 function omdbInfo(movie) {
 
-var omdbUrl = "http://www.omdbapi.com/?t=" + title + "&y=&plot=short&r=json";
-var title = "boondock+saints";
+    var request = require("request");
+    var omdbUrl = "http://www.omdbapi.com/?t=" + argv2 + "&y=&plot=short&r=json&tomatoes=true";
+    var argv2 = process.argv[2];
 
-request(omdbUrl, function (error, response, body) {
+    request(omdbUrl, function(error, response, body) {
 
-  if(!error && response.statusCode == 200) {
+        if (!error && response.statusCode == 200) {
 
-      console.log("The movie's rating is: " + JSON.parse(body)["imdbRating"]);
-      console.log("The release year is: " + JSON.parse(body) ["releaseYear"]);
-      console.log("The actors: " + JSON.parse(body) ["actors"]);
-      console.log("Plot: " + JSON.parse(body) ["plot"]);
+            console.log("=================================================");
+            // title
+            console.log("Title: " + JSON.parse(body)['Title']);
+            //release date
+            console.log("Release Date: " + argv2 + " is " + JSON.parse(body)['Year'] + ".");
+            //ratings
+            console.log("Rating: " + argv2 + " has an imdb rating of " + JSON.parse(body)['imdbRating'] + ".");
+            //language
+            console.log("Language: " + JSON.parse(body)['Language'] + ".");
+            //plot
+            console.log(argv2 + "'s plot: " + JSON.parse(body)['Plot'] + ".");
+            //actors
+            console.log("Actors in the movie: " + JSON.parse(body)['Actors'] + ".");
+            //tomatoes rating
+            console.log("Rotten tomatoes rating is: " + JSON.parse(body)['tomatoRating']);
+            console.log("=================================================");
 
-      fs.appendFile("random.txt", "Title: " + body.title);
-      fs.appendFile("random.txt", "Release Date: " + body.year);
-      fs.appendFile("random.txt", "Actors: " + body.actors);
-      fs.appendFile("random.txt", "Plot: " + body.plot);
+            //sends info to random.txt file
+            fs.appendFile("random.txt", "Title: " + JSON.stringify(body, null, 2));
+            fs.appendFile("random.txt", "Release Date: " + JSON.stringify(body, null, 2));
+            fs.appendFile("random.txt", "Rating: " + JSON.stringify(body, null, 2));
+            fs.appendFile("random.txt", "Language" + JSON.stringify(body, null, 2));
+            fs.appendFile("random.txt", "Plot: " + JSON.stringify(body, null, 2));
+            fs.appendFile("random.txt", "Actors: " + JSON.stringify(body, null, 2));
+            fs.appendFile("random.txt", "Rotten tomatoes" + JSON.stringify(body, null, 2));
+
+        } else {
+            console.log("Error, please try again.")
+        }
+    });
+
+    function doSomething() {
+
+
     }
-  else {
-      console.log("Error, please try again.")
-    }
-  });
 };
