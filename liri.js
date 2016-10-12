@@ -2,8 +2,6 @@ var objective = require("./keys.js");
 var request = require("request");
 var spotify = require("spotify");
 var newTwitter = require("twitter");
-// console.log(objective);
-// console.log(objective.twitterKeys);
 var client = newTwitter(objective.twitterKeys);
 var fs = require("fs");
 
@@ -40,7 +38,7 @@ function myTweets(tweets) {
 
         if (!error) {
             for (var i = 0; i < 20; i++) {
-
+                //printing my screenname and my 20 tweets
                 console.log("=================================================");
                 console.log("@mBaldwin91 " + JSON.stringify(tweets, null, 2));
             }
@@ -58,15 +56,15 @@ function spotifySong(song) {
     }, function(err, data, response) {
 
         if (!err) {
-                
-                console.log("=================================================");
-                //artist
-                console.log("Artist: " + JSON.stringify(data, null, 2));
-                //songname
-                console.log("Songname: " + JSON.stringify(data, null, 2));
-                //album
-                console.log("Album: " + JSON.stringify(data, null, 2));
-                console.log("=================================================");
+
+            console.log("=================================================");
+            //artist
+            console.log("Artist: " + JSON.stringify(data, null, 2));
+            //songname
+            console.log("Songname: " + JSON.stringify(data, null, 2));
+            //album
+            console.log("Album: " + JSON.stringify(data, null, 2));
+            console.log("=================================================");
 
         } else {
             console.log("Error, please try again.")
@@ -116,7 +114,7 @@ function omdbInfo(movie) {
     });
 
     function doSomething() {
-
+      //needs to be finished - to be continued...
 
     }
 };
